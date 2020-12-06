@@ -1,5 +1,5 @@
 <html>
-
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <head>
     <style type="text/css">
         * {
@@ -18,6 +18,10 @@
             background-color: whitesmoke;
             height: 100%;
             padding: 32px 16px 32px 16px;
+        }
+
+        input:focus {
+            font-size: 32px;
         }
 
         input {
@@ -137,7 +141,6 @@
             font-size: 28px;
             line-height: 36px;
         }
-
     </style>
 </head>
 <script>
@@ -151,7 +154,7 @@
             var el = `
                 <div id=pokemonDiv${i + 1} class="pokemonDiv">
                     <img id='pokemon${i + 1}'
-                    onclick="cry(${i+1})"
+                    onclick="cry(${i + 1})"
                     src='https://vignette.wikia.nocookie.net/pokemon-fano/images/6/6f/Poke_Ball.png/revision/latest/scale-to-width-down/340?cb=20140520015336'
                     class="pokemonSprite">
                     <div class="inputs-div">
@@ -190,8 +193,10 @@
         var front = 'front_default';
         var luck = Math.floor(Math.random() * (10 - 1)) + 1;
         console.log(luck);
-        if(luck > 6)
+        if (luck > 6) {
             front = 'front_shiny';
+            document.getElementById('pokemonDiv' + index).style.border = '8px solid gold';
+        }
         img.src = myJson.sprites.versions['generation-v']['black-white'].animated[front];
 
         colorDiv(index, type);
