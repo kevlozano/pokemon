@@ -253,7 +253,7 @@
 
     function cry(index) {
         var audio = document.getElementById('cry');
-        var name = document.getElementById('nombre' + index).value;
+        var name = document.getElementById('nombre' + index).value.toLowerCase();
         audio.src = `https://play.pokemonshowdown.com/audio/cries/${name}.mp3`;
         audio.play();
     }
