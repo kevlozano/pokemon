@@ -151,10 +151,11 @@
             var el = `
                 <div id=pokemonDiv${i + 1} class="pokemonDiv">
                     <img id='pokemon${i + 1}'
+                    onclick="cry(${i+1})"
                     src='https://vignette.wikia.nocookie.net/pokemon-fano/images/6/6f/Poke_Ball.png/revision/latest/scale-to-width-down/340?cb=20140520015336'
                     class="pokemonSprite">
                     <div class="inputs-div">
-                    <input id='nombre${i + 1}' class='nombre' placeholder="Nombre" onchange="executeSpriteSearch(${i + 1})" />
+                    <input id='nombre${i + 1}' class='nombre' placeholder="Nombre" onchange="executeSpriteSearch(${i + 1})" spellcheck="false"/>
                     <div class="input-row">
                         <input placeholder='Ataque' id='ataque${i + 1}' type='text' onchange='ataqueBaseCalc(${i + 1})' />
                         <input placeholder="Nivel" id='nivel${i + 1}' type='text' onchange='ataqueBaseCalc(${i + 1})' />
@@ -185,7 +186,13 @@
         var img = document.getElementById('pokemon' + index);
         var type = myJson.types[0].type.name
         document.getElementById('tipo' + index).innerText = type;
-        img.src = myJson.sprites.front_default;
+        console.log(myJson.sprites);
+        var front = 'front_default';
+        var luck = Math.floor(Math.random() * (10 - 1)) + 1;
+        console.log(luck);
+        if(luck > 6)
+            front = 'front_shiny';
+        img.src = myJson.sprites.versions['generation-v']['black-white'].animated[front];
 
         colorDiv(index, type);
     }
@@ -195,7 +202,6 @@
         var ataque = document.getElementById('ataque' + index).value;
         var ataqueBase = Number(nivel) + Number(ataque);
         document.getElementById('ataqueBase' + index).innerText = ataqueBase;
-        document.getElementById(`pokemon${index}`).style.objectFit = 'cover';
         return ataqueBase;
     }
 
@@ -218,7 +224,8 @@
             ground: 'brown',
             rock: 'silver',
             grass: 'green',
-            normal: 'burlywood'
+            normal: 'burlywood',
+            ice: 'aliceblue'
         }
 
         var deg = Math.floor(Math.random() * (90 - 1)) + 1;
@@ -242,6 +249,14 @@
             document.getElementById('battle-button').style.color = 'white';
         }
     }
+
+    function cry(index) {
+        var audio = document.getElementById('cry');
+        var name = document.getElementById('nombre' + index).value;
+        audio.src = `https://play.pokemonshowdown.com/audio/cries/${name}.mp3`;
+        audio.play();
+    }
+
 </script>
 <div class="headerDiv">
     <img src='https://upload.wikimedia.org/wikipedia/commons/thumb/9/98/International_Pok%C3%A9mon_logo.svg/1200px-International_Pok%C3%A9mon_logo.svg.png'
@@ -252,6 +267,9 @@
 <body>
     <audio id='battle'>
         <source src="battle.mp3" type="audio/mp3">
+    </audio>
+    <audio id='cry'>
+        <source src="" type="audio/mpeg">
     </audio>
     <div id='container'>
 
