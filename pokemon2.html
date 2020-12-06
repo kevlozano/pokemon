@@ -1,0 +1,219 @@
+<html>
+
+<head>
+    <style type="text/css">
+        * {
+            margin: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h1 {
+            font-size: 48px;
+            line-height: 56px;
+            padding-bottom: 32px;
+        }
+
+        body {
+            background-color: whitesmoke;
+            height: 100%;
+            padding: 32px 16px 32px 16px;
+        }
+
+        input {
+            text-align: center;
+            width: 45%;
+            background-color: transparent;
+            color: white;
+            height: 60px;
+            font-size: 32px;
+            line-height: 40px;
+            margin-bottom: 16px;
+            padding: 8px;
+            border: 0.8px solid white;
+            border-radius: 25px;
+        }
+
+        input:focus {
+            color: gray;
+        }
+
+        label {
+            font-size: 24px;
+            line-height: 32px;
+        }
+
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            padding-bottom: 56px;
+        }
+
+        .nombre {
+            width: 100%;
+        }
+
+        .pokemonSprite {
+            width: 100%;
+            max-height: 50%;
+            object-fit: contain;
+        }
+
+        .pokemonDiv {
+            margin-top: 16px;
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid gray;
+            border-radius: 25px;
+            width: 47%;
+            height: 600px;
+            text-align: center;
+            justify-content: space-between;
+        }
+
+        .inputs-div {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            padding: 12px 20% 12px 20%;
+        }
+
+        .input-row {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .left-div,
+        .right-div,
+        .image-div {
+            width: 48%;
+        }
+
+        .image-div {
+            display: flex;
+            align-items: center;
+        }
+
+        .ataque-base-label {
+            font-size: 32px;
+            line-height: 40px;
+            font-weight: 700;
+        }
+
+        .ataque-base {
+            margin: 0;
+            padding: 0;
+        }
+
+        .tipo {
+            font-size: 18px;
+            line-height: 24px;
+        }
+
+        .ataqueBase {
+            font-size: 56px;
+            line-height: 64px;
+            padding-bottom: 16px;
+        }
+    </style>
+</head>
+<h1>Pokemon</h1>
+<script>
+    function onLoad() {
+        console.log(document.getElementById('container'));
+
+
+        var allEl = ''
+
+        for (i = 0; i <= 5; i++) {
+            var el = `
+                <div id=pokemonDiv${i + 1} class="pokemonDiv">
+                    <img id='pokemon${i + 1}'
+                    src='https://vignette.wikia.nocookie.net/pokemon-fano/images/6/6f/Poke_Ball.png/revision/latest/scale-to-width-down/340?cb=20140520015336'
+                    class="pokemonSprite">
+                    <div class="inputs-div">
+                    <input id='nombre${i + 1}' class='nombre' placeholder="Nombre" onchange="executeSpriteSearch(${i + 1})" />
+                    <div class="input-row">
+                        <input placeholder='Ataque' id='ataque${i + 1}' type='text' onchange='ataqueBaseCalc(${i + 1})' />
+                        <input placeholder="Nivel" id='nivel${i + 1}' type='text' onchange='ataqueBaseCalc(${i + 1})' />
+                    </div>
+                    <h1 class="ataqueBase" id='ataqueBase${i + 1}'></h1>
+                    <h5 id='tipo${i + 1}' class="tipo"></h5>
+                    </div>
+                </div>
+            `;
+
+            allEl = allEl + ' ' + el;
+        }
+
+        try {
+            var b = document.getElementById('container');
+            b.innerHTML = allEl;
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    window.onload = onLoad;
+
+    async function getSprites(index, name) {
+        var response = await fetch('https://pokeapi.co/api/v2/pokemon/' + name);
+        var myJson = await response.json();
+        var img = document.getElementById('pokemon' + index);
+        var type = myJson.types[0].type.name
+        document.getElementById('tipo' + index).innerText = type;
+        img.src = myJson.sprites.front_default;
+
+        colorDiv(index, type);
+    }
+
+    async function ataqueBaseCalc(index) {
+        var nivel = document.getElementById('nivel' + index).value;
+        var ataque = document.getElementById('ataque' + index).value;
+        var ataqueBase = Number(nivel) + Number(ataque);
+        document.getElementById('ataqueBase' + index).innerText = ataqueBase;
+        document.getElementById(`pokemon${index}`).style.objectFit = 'cover';
+        return ataqueBase;
+    }
+
+    async function executeSpriteSearch(index) {
+        var name = document.getElementById('nombre' + index).value;
+        getSprites(index, name.toLowerCase());
+    }
+
+    async function colorDiv(index, type) {
+        var types = {
+            fire: 'red',
+            water: 'blue',
+            electric: 'gold',
+            psychic: 'purple',
+            poison: 'purple',
+            ghost: 'purple',
+            flying: 'gray',
+            dragon: 'orange',
+            fighting: 'black',
+            ground: 'brown',
+            rock: 'silver',
+            grass: 'green',
+            normal: 'burlywood'
+        }
+
+        var deg = Math.floor(Math.random() * (90 - 1)) + 1;
+        var pokemonDiv = document.getElementById('pokemonDiv' + index)
+        pokemonDiv.style.backgroundImage = `linear-gradient(${deg}deg, black, ${types[type]})`;
+        pokemonDiv.style.color = 'white';
+    }
+
+</script>
+
+<body>
+    <div id='container'>
+
+    </div>
+</body>
+
+</html>
